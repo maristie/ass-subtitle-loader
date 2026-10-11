@@ -26,17 +26,17 @@
  const encoded=new DataTransfer();encoded.items.add(new File([bytes],'utf16.ass'));input.files=encoded.files;input.dispatchEvent(new Event('change',{bubbles:true}));await until(async()=> (await status()).subtitleName==='utf16.ass' && (await status()).rendererReady,'UTF-16 picker');
  picker.querySelector('select').value='windows-1252';input.files=files.files;input.dispatchEvent(new Event('change',{bubbles:true}));await until(async()=> (await status()).subtitleName==='synthetic.ass','Windows-1252 picker');
  await send({type:'ASS_SUBTITLE_SET_DELAY',delay:0.5});assert((await status()).subtitleDelay===0.5,'delay');
- video.pause();video.currentTime=1;await wait(200);assert(Math.abs((await status()).subtitleTime-0.5)<0.2,'seeking');
+ video.pause();video.currentTime=1;await until(async()=>!video.seeking && Math.abs((await status()).subtitleTime-0.5)<0.2,'seeking');
  video.playbackRate=2;await video.play();await wait(250);assert(document.querySelector('.ass-subtitle-loader-dom-comment'),'speed change');
  await send({type:'ASS_SUBTITLE_SET_ADJUSTMENTS',adjustments:{opacity:0}});assert((await status()).subtitleAdjustments.opacity===0,'zero opacity');
- assert([...document.querySelectorAll('.ass-subtitle-loader-dom-comment')].every(el=>getComputedStyle(el).opacity==='0'),'zero opacity paint');
+ await until(()=>{const nodes=[...document.querySelectorAll('.ass-subtitle-loader-dom-comment')];return nodes.length>0 && nodes.every(el=>getComputedStyle(el).opacity==='0');},'zero opacity paint');
  await send({type:'ASS_SUBTITLE_SET_ADJUSTMENTS',adjustments:{opacity:1}});
- const host=video.parentElement;host.style.width='640px';window.dispatchEvent(new Event('resize'));await wait(200);assert(document.querySelector('.ass-subtitle-loader-overlay').getBoundingClientRect().width<=641,'resize bounds');
+ const host=video.parentElement;host.style.width='640px';window.dispatchEvent(new Event('resize'));await until(()=>document.querySelector('.ass-subtitle-loader-overlay').getBoundingClientRect().width<=641,'resize bounds');
  await host.requestFullscreen();await wait(250);assert(document.fullscreenElement===host,'fullscreen');assert((await status()).overlayConnected,'fullscreen overlay');await document.exitFullscreen();
  await send({type:'ASS_SUBTITLE_REMOVE'});assert(!(await status()).hasSubtitle && !document.querySelector('.ass-subtitle-loader-overlay'),'removal');
  const oldParent=video.parentElement,next=video.nextSibling;video.remove();await wait(100);
  const pending=await send({type:'ASS_SUBTITLE_LOAD',name:'waiting.ass',content});assert(pending.pending,'waiting for video');oldParent.insertBefore(video,next);await until(async()=> (await status()).rendererReady,'video arrival');
- const clone=video.cloneNode();clone.src=video.currentSrc;video.replaceWith(clone);await wait(200);assert(!(await status()).hasSubtitle,'video replacement cleanup');
+ const clone=video.cloneNode();clone.src=video.currentSrc;video.replaceWith(clone);await until(async()=>!(await status()).hasSubtitle,'video replacement cleanup');
  await clone.play();await send({type:'ASS_SUBTITLE_LOAD',name:'private-check.ass',content});
  const s=await status();
  if(s.privateContext) {
