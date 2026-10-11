@@ -1,0 +1,20 @@
+[Script Info]
+Title: DOM Outline Visual Comparison
+ScriptType: v4.00+
+PlayResX: 1280
+PlayResY: 720
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Thin,Noto Sans JP,58,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,-1,0,0,0,100,100,0,0,1,0.5,0,5,20,20,20,1
+Style: Normal,Noto Sans JP,58,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,-1,0,0,0,100,100,0,0,1,2,0,5,20,20,20,1
+Style: Thick,Noto Sans JP,58,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,-1,0,0,0,100,100,0,0,1,4,0,5,20,20,20,1
+Style: Shadowed,Noto Sans JP,58,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,-1,0,0,0,100,100,0,0,1,2,3,5,20,20,20,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:10.00,Thin,,0,0,0,,{\pos(640,170)}OUTLINE 0.5  Hamburgefontsiv 0123
+Dialogue: 0,0:00:00.00,0:00:10.00,Normal,,0,0,0,,{\pos(640,300)}OUTLINE 2  Hamburgefontsiv 0123
+Dialogue: 0,0:00:00.00,0:00:10.00,Thick,,0,0,0,,{\pos(640,430)}OUTLINE 4  Hamburgefontsiv 0123
+Dialogue: 0,0:00:00.00,0:00:10.00,Shadowed,,0,0,0,,{\pos(640,560)}OUTLINE 2 SHADOW 3  Hamburgefontsiv 0123

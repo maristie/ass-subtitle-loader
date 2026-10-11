@@ -1,0 +1,22 @@
+[Script Info]
+Title: Dense Mixed DOM Lanes
+ScriptType: v4.00+
+PlayResX: 1280
+PlayResY: 720
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Lane,Noto Sans JP,32,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,2,0,7,0,0,0,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.00,0:01:00.00,Lane,,0,0,0,,{\move(160,20,160,20,0,60000)\fs16\an7}dense lane 0 font 16
+Dialogue: 0,0:00:00.00,0:01:00.00,Lane,,0,0,0,,{\move(160,48.35,160,48.35,0,60000)\fs40\an4}dense lane 1 font 40
+Dialogue: 0,0:00:00.00,0:01:00.00,Lane,,0,0,0,,{\move(160,79.85,160,79.85,0,60000)\fs20\an1}dense lane 2 font 20
+Dialogue: 0,0:00:00.00,0:01:00.00,Lane,,0,0,0,,{\move(160,79.85,160,79.85,0,60000)\fs16\an7}dense lane 3 font 16\Nsecond line
+Dialogue: 0,0:00:45.00,0:00:59.00,Lane,,0,0,0,,{\move(160,105.05,160,105.05,0,14000)\fs22\an7}inactive lane 4 font 22
+Dialogue: 0,0:00:00.00,0:01:00.00,Lane,,0,0,0,,{\move(160,122.375,160,122.375,0,60000)\fs24\an7}dense lane 5 font 24
+Dialogue: 0,0:00:00.00,0:01:00.00,Lane,,0,0,0,,{\move(160,153.0875,160,153.0875,0,60000)\fs30\an4}dense lane 6 font 30
+Dialogue: 0,0:00:00.00,0:01:00.00,Lane,,0,0,0,,{\move(160,179.075,160,179.075,0,60000)\fs18\an1}dense lane 7 font 18
+Dialogue: 0,0:00:00.00,0:01:00.00,Lane,,0,0,0,,{\move(160,179.075,160,179.075,0,60000)\fs26\an7}dense lane 8 font 26

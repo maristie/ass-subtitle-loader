@@ -1,0 +1,261 @@
+:root {
+  color-scheme: light dark;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 14px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  width: 440px;
+  min-width: 440px;
+  color: #15191f;
+  background: #f5f7f9;
+}
+
+.panel {
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+}
+
+header {
+  display: grid;
+  gap: 4px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 650;
+}
+
+.status {
+  min-height: 34px;
+  margin: 0;
+  color: #52606d;
+  line-height: 1.35;
+}
+
+.state-panel {
+  border: 1px solid #d8dee5;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.state-panel summary {
+  min-height: 34px;
+  padding: 8px 10px;
+  cursor: pointer;
+  color: #354250;
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.state-panel summary:focus-visible {
+  outline: 2px solid #165dff;
+  outline-offset: -2px;
+  border-radius: 7px;
+}
+
+.state-panel[open] summary {
+  border-bottom: 1px solid #e8edf2;
+}
+
+.state-list {
+  display: grid;
+  gap: 0;
+  margin: 0;
+}
+
+.state-panel:not([open]) > .state-list {
+  display: none;
+}
+
+.state-list div {
+  display: grid;
+  grid-template-columns: 86px minmax(0, 1fr);
+  gap: 8px;
+  padding: 8px 10px;
+  border-top: 1px solid #e8edf2;
+}
+
+.state-list div:first-child {
+  border-top: 0;
+}
+
+.state-list dt {
+  color: #52606d;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.state-list dd {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: #15191f;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+  color: #354250;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+select,
+input,
+button {
+  width: 100%;
+  min-height: 34px;
+  border: 1px solid #b8c1ca;
+  border-radius: 6px;
+  font: inherit;
+}
+
+select,
+input {
+  padding: 0 9px;
+  color: #15191f;
+  background: #ffffff;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+button {
+  padding: 0 10px;
+  color: #ffffff;
+  background: #165dff;
+  border-color: #165dff;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+button.secondary {
+  color: #15191f;
+  background: #ffffff;
+  border-color: #b8c1ca;
+}
+
+button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.delay-panel,
+.render-panel,
+.adjustment-panel,
+.defaults-panel {
+  display: grid;
+  gap: 8px;
+}
+
+.adjustment-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 96px;
+  gap: 8px;
+  align-items: center;
+}
+
+.adjustment-grid .field {
+  min-width: 0;
+}
+
+.delay-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.delay-actions button {
+  padding: 0 6px;
+  font-size: 12px;
+}
+
+.defaults-status {
+  margin: 0;
+  color: #52606d;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.defaults-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.defaults-actions button {
+  padding: 0 6px;
+  font-size: 12px;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    color: #edf1f5;
+    background: #1d2228;
+  }
+
+  .status {
+    color: #aab4bf;
+  }
+
+  .defaults-status {
+    color: #aab4bf;
+  }
+
+  .field {
+    color: #c7d0d9;
+  }
+
+  .state-panel {
+    background: #252b33;
+    border-color: #3b4652;
+  }
+
+  .state-panel summary {
+    color: #c7d0d9;
+  }
+
+  .state-panel[open] summary {
+    border-color: #333d47;
+  }
+
+  .state-list div {
+    border-color: #333d47;
+  }
+
+  .state-list dt {
+    color: #aab4bf;
+  }
+
+  .state-list dd {
+    color: #edf1f5;
+  }
+
+  select,
+  input,
+  button.secondary {
+    color: #edf1f5;
+    background: #252b33;
+    border-color: #46515d;
+  }
+}

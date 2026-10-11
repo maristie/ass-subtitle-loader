@@ -1,0 +1,73 @@
+name: Desktop Firefox validation
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  checks:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npm audit --audit-level=high
+      - run: npm run check
+      - run: npm run prepare:release
+      - run: python3 scripts/verify-reproducibility.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: unsigned-review-artifacts
+          path: dist/
+          if-no-files-found: error
+          retention-days: 14
+  firefox:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-14]
+        firefox: ['140.0', latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - name: Install desktop Firefox in runner temporary directory
+        env:
+          FIREFOX_RELEASE: ${{ matrix.firefox }}
+        shell: bash
+        run: |
+          if [[ "$FIREFOX_RELEASE" == latest ]]; then
+            product=firefox-latest-ssl
+          else
+            product="firefox-${FIREFOX_RELEASE}-ssl"
+          fi
+          if [[ "$RUNNER_OS" == macOS ]]; then
+            curl --fail --location --retry 3 "https://download.mozilla.org/?product=${product}&os=osx&lang=en-US" -o "$RUNNER_TEMP/firefox.dmg"
+            hdiutil attach "$RUNNER_TEMP/firefox.dmg" -nobrowse -mountpoint "$RUNNER_TEMP/firefox-mount"
+            cp -R "$RUNNER_TEMP/firefox-mount/Firefox.app" "$RUNNER_TEMP/Firefox.app"
+            hdiutil detach "$RUNNER_TEMP/firefox-mount"
+            echo "FIREFOX_BIN=$RUNNER_TEMP/Firefox.app/Contents/MacOS/firefox" >> "$GITHUB_ENV"
+          else
+            curl --fail --location --retry 3 "https://download.mozilla.org/?product=${product}&os=linux64&lang=en-US" -o "$RUNNER_TEMP/firefox.tar"
+            tar -xf "$RUNNER_TEMP/firefox.tar" -C "$RUNNER_TEMP"
+            echo "FIREFOX_BIN=$RUNNER_TEMP/firefox/firefox" >> "$GITHUB_ENV"
+          fi
+      - name: CSS lanes, wrapping, scheduler, and bounds regressions
+        run: npm run test:renderer -- --artifacts-dir artifacts/synthetic
+      - name: Installed extension and private-window tests
+        run: npm run test:e2e -- --firefox-bin "$FIREFOX_BIN"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: success()
+        with:
+          name: synthetic-${{ matrix.os }}-${{ matrix.firefox }}
+          path: artifacts/synthetic/*.png
+          if-no-files-found: error
+          retention-days: 14

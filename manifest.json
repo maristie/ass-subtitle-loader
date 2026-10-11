@@ -1,0 +1,45 @@
+{
+  "manifest_version": 2,
+  "name": "ASS Subtitle Loader",
+  "version": "0.2.0",
+  "description": "Load local ASS/SSA moving and fixed comments over HTML5 video with CSS. Adjust timing, size, opacity, padding, and lane spacing.",
+  "developer": {
+    "name": "Maristie",
+    "url": "https://github.com/maristie/ass-subtitle-loader"
+  },
+  "homepage_url": "https://github.com/maristie/ass-subtitle-loader",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "ass-subtitle-loader@example.local",
+      "strict_min_version": "140.0",
+      "data_collection_permissions": {
+        "required": [
+          "none"
+        ]
+      }
+    }
+  },
+  "permissions": [
+    "activeTab",
+    "storage"
+  ],
+  "content_security_policy": "script-src 'self'; object-src 'self'",
+  "browser_action": {
+    "default_title": "ASS Subtitle Loader",
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png",
+      "48": "icons/icon-48.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "96": "icons/icon-96.png"
+  },
+  "web_accessible_resources": [
+    "fonts/NotoSansCJKjp-Regular.otf"
+  ]
+}

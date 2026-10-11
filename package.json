@@ -1,0 +1,29 @@
+{
+  "name": "ass-subtitle-loader",
+  "version": "0.2.0",
+  "private": true,
+  "description": "CSS-only ASS comment subtitles for desktop Firefox",
+  "scripts": {
+    "bundle": "node scripts/build-content-bundle.js",
+    "check": "npm run package && npm run test:unit && npm run lint:webext",
+    "test:unit": "node --test test/unit/*.test.mjs",
+    "lint:webext": "node scripts/lint-extension.js",
+    "package": "node scripts/build-extension.js",
+    "prepare:release": "node scripts/prepare-release.js",
+    "test:renderer": "python3 scripts/run-renderer-tests.py",
+    "test:e2e": "python3 scripts/run-extension-e2e-tests.py",
+    "generate:synthetic-lanes": "python3 scripts/generate-synthetic-lane-matrix.py",
+    "generate:large-load": "python3 scripts/generate-large-load-ass.py"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "addons-linter": "10.14.0"
+  },
+  "license": "MIT",
+  "overrides": {
+    "brace-expansion": "5.0.12"
+  }
+}

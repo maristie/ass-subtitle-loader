@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="popup.css">
+    <title>ASS Subtitle Loader</title>
+  </head>
+  <body>
+    <main class="panel">
+      <header>
+        <h1>ASS Subtitle Loader</h1>
+        <p id="status" class="status">Ready</p>
+      </header>
+
+      <div class="actions">
+        <button id="load" type="button">Load ASS</button>
+        <button id="remove" type="button" class="secondary">Remove</button>
+      </div>
+
+      <section class="delay-panel" aria-label="Subtitle delay">
+        <label class="field" for="delay">Delay (s)</label>
+        <input id="delay" type="number" step="0.1" value="0.0">
+        <div class="delay-actions">
+          <button id="delay-earlier" type="button" class="secondary">Earlier -0.5s</button>
+          <button id="delay-reset" type="button" class="secondary">Reset</button>
+          <button id="delay-later" type="button" class="secondary">Later +0.5s</button>
+        </div>
+      </section>
+
+
+      <section class="adjustment-panel" aria-label="Subtitle adjustments">
+        <div class="adjustment-grid">
+          <label class="field" for="font-scale">Font size (%)</label>
+          <input id="font-scale" type="number" min="50" max="200" step="5" value="100">
+          <label class="field" for="font-opacity">Opacity (%)</label>
+          <input id="font-opacity" type="number" min="0" max="100" step="5" value="100">
+          <label class="field" for="margin-top">Top padding (%)</label>
+          <input id="margin-top" type="number" min="0" max="40" step="1" value="0">
+          <label class="field" for="margin-bottom">Bottom padding (%)</label>
+          <input id="margin-bottom" type="number" min="0" max="40" step="1" value="0">
+          <label class="field" for="lane-gap">Lane gap (%)</label>
+          <input id="lane-gap" type="number" min="0" max="100" step="5" value="0">
+        </div>
+        <button id="adjustment-reset" type="button" class="secondary">Reset Adjustments</button>
+      </section>
+
+      <section class="defaults-panel" aria-label="Default settings">
+        <p id="defaults-status" class="defaults-status">Defaults: built-in</p>
+        <div class="defaults-actions">
+          <button id="save-site-defaults" type="button" class="secondary">Save Site</button>
+          <button id="reset-site-defaults" type="button" class="secondary">Reset Site</button>
+          <button id="save-global-defaults" type="button" class="secondary">Save Global</button>
+          <button id="reset-global-defaults" type="button" class="secondary">Reset Global</button>
+        </div>
+      </section>
+
+      <details class="state-panel">
+        <summary>Status and diagnostics</summary>
+        <label><input id="diagnostics" type="checkbox"> Console diagnostics (this tab session)</label>
+        <dl id="state" class="state-list">
+          <div>
+            <dt>Target</dt>
+            <dd>Checking active tab...</dd>
+          </div>
+          <div>
+            <dt>ASS file</dt>
+            <dd>None</dd>
+          </div>
+          <div>
+            <dt>Renderer</dt>
+            <dd>Not attached</dd>
+          </div>
+          <div>
+            <dt>Draw</dt>
+            <dd>No rendered frames</dd>
+          </div>
+          <div>
+            <dt>Performance</dt>
+            <dd>No samples</dd>
+          </div>
+        </dl>
+      </details>
+    </main>
+    <script src="../build/popup.bundle.js"></script>
+  </body>
+</html>

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ASS Subtitle Loader Recorded Video Test</title>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        font-family: system-ui, sans-serif;
+        background: #20242b;
+        color: #f8fafc;
+      }
+
+      main {
+        width: min(900px, calc(100vw - 32px));
+      }
+
+      video {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        background: #111827;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <video id="video" controls muted playsinline></video>
+    </main>
+
+    <script>
+      const video = document.getElementById("video");
+      video.loop = true;
+      video.src = "synthetic.webm";
+      video.play().then(() => {
+        video.currentTime = 3.2;
+        document.body.dataset.ready = "1";
+      }).catch(() => { document.body.dataset.error = "synthetic-playback"; });
+    </script>
+  </body>
+</html>

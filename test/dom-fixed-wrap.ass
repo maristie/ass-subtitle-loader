@@ -1,0 +1,24 @@
+[Script Info]
+Title: DOM Fixed Position Wrapping
+ScriptType: v4.00+
+PlayResX: 1280
+PlayResY: 900
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Default,Noto Sans JP,36,&H00FFFFFF,&H000000FF,&H00202020,&H80000000,0,0,0,0,100,100,0,0,1,2,0,8,0,0,0,1
+Style: NicoFix,Noto Sans JP,36,&H00FFFFFF,&H000000FF,&H00202020,&H80000000,0,0,0,0,100,100,0,0,1,2,0,2,0,0,0,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.00,0:01:00.00,Default,,0,0,0,,{\an8\pos(640,40)}TOP WRAP This fixed top subtitle is intentionally very long so Firefox must wrap it across several readable lines while keeping its top edge anchored at the requested ASS position.
+Dialogue: 0,0:00:00.00,0:01:00.00,Default,,0,0,0,,{\an2\pos(640,680)}BOTTOM WRAP https://example.test/this-is-one-very-long-unbroken-subtitle-token-that-must-wrap-instead-of-being-clipped-outside-the-video-frame
+Dialogue: 0,0:00:00.00,0:01:00.00,NicoFix,,0,0,0,,{\pos(640,40)}TOP INWARD This inherited bottom-aligned fixed comment is intentionally long enough to wrap while its additional lines grow down into the video.
+Dialogue: 0,0:00:00.00,0:01:00.00,Default,,0,0,0,,{\pos(640,680)}BOTTOM INWARD This inherited top-aligned fixed comment is intentionally long enough to wrap while its additional lines grow up into the video.
+Dialogue: 0,0:00:00.00,0:01:00.00,NicoFix,,0,0,0,,{\pos(640,120)}TOP SHORT CONTROL
+Dialogue: 0,0:00:00.00,0:01:00.00,Default,,0,0,0,,{\pos(640,600)}BOTTOM SHORT CONTROL
+Dialogue: 0,0:00:00.00,0:01:00.00,NicoFix,,0,0,0,,{\pos(640,180)}TOP EXPLICIT CONTROL\NAUTHORED SECOND LINE
+Dialogue: 0,0:00:00.00,0:01:00.00,Default,,0,0,0,,{\pos(640,540)}BOTTOM EXPLICIT CONTROL\NAUTHORED SECOND LINE
+Dialogue: 0,0:00:00.00,0:01:00.00,Default,,0,0,0,,{\an5\pos(640,360)}MIDDLE CONTROL This long fixed middle-position sign remains a single line because automatic wrapping is limited to fixed top and bottom subtitles.
+Dialogue: 0,0:00:00.00,0:01:00.00,Default,,0,0,0,,{\an8\move(640,220,641,220,0,60000)}MOVING CONTROL This long moving subtitle remains a single line so its scrolling geometry and timing are unchanged by fixed-position wrapping.

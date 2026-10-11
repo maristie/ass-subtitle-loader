@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ASS Subtitle Loader Harness</title>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        font-family: system-ui, sans-serif;
+        background: #20242b;
+        color: #f8fafc;
+      }
+
+      #movie_player {
+        width: min(900px, calc(100vw - 32px));
+        position: relative;
+      }
+
+      video {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        background: #111827;
+      }
+    </style>
+  </head>
+  <body>
+    <main id="movie_player">
+      <video id="video" controls autoplay muted playsinline></video>
+    </main>
+
+    <script>
+      window.browser = {
+        runtime: {
+          getURL(path) {
+            return new URL(`../${path}`, location.href).href;
+          },
+          onMessage: {
+            addListener(listener) {
+              window.__assSubtitleHarnessListener = listener;
+            }
+          }
+        }
+      };
+    </script>
+    <script src="../build/content.bundle.js"></script>
+    <script type="module">
+      import * as statusView from "../src/status-view.js";
+      import {
+        createRendererFontConfig
+      } from "../src/core/font-resolver.js";
+
+      window.__assSubtitleTestHooks = {
+        statusView,
+        fonts: {
+          createRendererFontConfig
+        }
+      };
+    </script>
+    <script>
+      const video = document.getElementById("video");
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
+      canvas.width = 1280;
+      canvas.height = 720;
+
+      function draw(time) {
+        const gradient = context.createLinearGradient(0, 0, canvas.width, canvas.height);
+        gradient.addColorStop(0, "#0f766e");
+        gradient.addColorStop(0.5, "#1d4ed8");
+        gradient.addColorStop(1, "#be123c");
+        context.fillStyle = gradient;
+        context.fillRect(0, 0, canvas.width, canvas.height);
+
+        context.fillStyle = "rgba(255, 255, 255, 0.16)";
+        const x = 160 + Math.sin(time / 700) * 120;
+        context.fillRect(x, 160, 360, 220);
+
+        context.fillStyle = "#ffffff";
+        context.font = "48px system-ui, sans-serif";
+        context.fillText("HTML5 video test", 72, 92);
+
+        requestAnimationFrame(draw);
+      }
+
+      async function bootHarness() {
+        const params = new URLSearchParams(location.search);
+        const subtitleFile = params.get("file") || "dom-fixed-wrap.ass";
+        requestAnimationFrame(draw);
+        video.srcObject = canvas.captureStream(30);
+        await video.play();
+
+
+        const content = await fetch(subtitleFile).then((response) => response.text());
+        await window.__assSubtitleHarnessListener({
+          type: "ASS_SUBTITLE_LOAD",
+          name: subtitleFile,
+          content
+        });
+      }
+
+      bootHarness().catch((error) => {
+        document.body.textContent = error && error.stack ? error.stack : String(error);
+      });
+    </script>
+  </body>
+</html>
