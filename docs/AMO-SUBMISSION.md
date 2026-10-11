@@ -15,7 +15,7 @@ AMO validation reported **0 errors and 1 warning**: the documented Android-only 
 
 The AMO-served XPI has been downloaded and compared with the upload: every code and asset file is identical, and the parsed manifests match. AMO normalizes directory entries and manifest whitespace, so whole-archive hashes differ.
 
-The listing icon and both synthetic screenshots have been uploaded. The screenshots use local test fixtures and contain no personal browsing or account data.
+The listing icon and both synthetic screenshots have been uploaded. The screenshots use local test fixtures and contain no personal browsing or account data. The main screenshot caption is saved; the picker screenshot caption is pending AMO’s daily write limit. This does not undo the accepted version or image uploads.
 
 The existing extension projects use the official AMO v5 API with credentials held in macOS Keychain. This submission used that authenticated API route after browser sign-in encountered a client challenge. No credentials were stored in the repository, release source, command arguments, or logs. CI continues to validate and package only; it does not sign or publish.
 
