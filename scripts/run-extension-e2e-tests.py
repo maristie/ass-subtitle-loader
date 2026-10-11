@@ -67,7 +67,19 @@ def main():
         normal=run_page(client,base)
         previous_handles=set(client.command('WebDriver:GetWindowHandles',{}))
         client.command('Marionette:SetContext',{'value':'chrome'})
-        execute_async(client,'''const done=arguments[arguments.length-1];const {OpenBrowserWindow}=Services.wm.getMostRecentWindow('navigator:browser');const win=OpenBrowserWindow({private:true});win.addEventListener('load',()=>{win.focus();done(true);},{once:true});''')
+        started=execute_async(client,'''const done=arguments[arguments.length-1];
+const {OpenBrowserWindow}=Services.wm.getMostRecentWindow('navigator:browser');
+const win=OpenBrowserWindow({private:true});
+// The window load event precedes delayed startup, which navigates the initial
+// tab to about:privatebrowsing. Wait for that navigation before loading a fixture.
+let tries=0;
+const timer=setInterval(()=>{
+ const browser=win.gBrowser?.selectedBrowser;
+ if(win.gBrowserInit?.delayedStartupFinished && browser?.currentURI.spec==='about:privatebrowsing' && !browser.webProgress.isLoadingDocument) {
+  clearInterval(timer);win.focus();done(true);
+ } else if(++tries>200) {clearInterval(timer);done(false);}
+},50);''')
+        if not started:raise AssertionError('Private window startup did not finish')
         client.command('Marionette:SetContext',{'value':'content'})
         handles=set(client.command('WebDriver:GetWindowHandles',{}))-previous_handles
         if len(handles)!=1:raise AssertionError('Private window handle is ambiguous')

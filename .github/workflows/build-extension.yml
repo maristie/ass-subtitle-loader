@@ -63,17 +63,7 @@ jobs:
       - name: CSS lanes, wrapping, scheduler, and bounds regressions
         run: npm run test:renderer -- --artifacts-dir artifacts/synthetic
       - name: Installed extension and private-window tests
-        env:
-          FIREFOX_RELEASE: ${{ matrix.firefox }}
-        shell: bash
-        run: |
-          if [[ "$FIREFOX_RELEASE" == 140.0 ]]; then
-            # The old decoder process stalls on modern runner sandboxes.
-            # Scope the workaround to generated synthetic media in a disposable profile.
-            MOZ_DISABLE_RDD_SANDBOX=1 npm run test:e2e -- --firefox-bin "$FIREFOX_BIN"
-          else
-            npm run test:e2e -- --firefox-bin "$FIREFOX_BIN"
-          fi
+        run: npm run test:e2e -- --firefox-bin "$FIREFOX_BIN"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: success()
         with:
