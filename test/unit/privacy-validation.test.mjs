@@ -17,7 +17,7 @@ function fixture(privateContext=false) {
  return {api,state,stored,writes,reads,controller};
 }
 test('supported fixtures validate without expanding the CSS subset',()=>{
- for(const name of ['dom-fixed-wrap','dom-dense-lanes','dom-lane-scheduler','dom-synthetic-lane-matrix','large-load']) assert.ok(validateSubtitleContent(readFileSync(new URL(`../${name}.ass`,import.meta.url),'utf8')).supported);
+ for(const name of ['amo-danmaku','dom-fixed-wrap','dom-dense-lanes','dom-lane-scheduler','dom-synthetic-lane-matrix','large-load']) assert.ok(validateSubtitleContent(readFileSync(new URL(`../${name}.ass`,import.meta.url),'utf8')).supported);
 });
 test('unsupported and malformed files report line numbers without authored text',()=>{
  const mutations=[s=>s.replace('\\pos(', '\\clip('),s=>s+'\nDialogue: malformed secret-text',s=>s.replace('Format: Layer','Format: Secret'),s=>s.replace('0:00:00.00','0:99:00.00'),s=>s+'\n[Fonts]\nsecret-text',s=>s.replace('\\an8','\\an11'),s=>s.replace('\\an8','\\an8\\c&HFFFFFFF&'),s=>s.replace('\\an8','\\an8\\b1.2'),s=>s.replace('\\pos(640,40)','\\pos(,40)')];

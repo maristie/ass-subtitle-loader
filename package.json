@@ -2,7 +2,7 @@
   "name": "ass-subtitle-loader",
   "version": "0.2.0",
   "private": true,
-  "description": "CSS-only ASS comment subtitles for desktop Firefox",
+  "description": "CSS-only ASS/SSA danmaku and positioned subtitles for desktop Firefox",
   "scripts": {
     "bundle": "node scripts/build-content-bundle.js",
     "check": "npm run package && npm run test:unit && npm run lint:webext",

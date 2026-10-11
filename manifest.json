@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "ASS Subtitle Loader",
   "version": "0.2.0",
-  "description": "Load local ASS/SSA moving and fixed comments over HTML5 video with CSS. Adjust timing, size, opacity, padding, and lane spacing.",
+  "description": "Load local ASS/SSA danmaku over HTML5 video with CSS. Tuned for scrolling comments and fixed text, with timing, size, opacity, padding, and lane controls.",
   "developer": {
     "name": "Maristie",
     "url": "https://github.com/maristie/ass-subtitle-loader"
