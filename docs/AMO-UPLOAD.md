@@ -28,7 +28,7 @@ To reproduce the listing images, run `npm run bundle` followed by `python3 scrip
 | Default listing language | English (US) |
 | Version | 0.2.0 |
 | Category | Photos, Music & Videos |
-| Suggested tags | danmaku, subtitles, ass, video |
+| Tags | None selected: AMO’s allowed tag list does not include danmaku, subtitles, ass, or video; those terms appear naturally in the listing |
 | Homepage | https://github.com/maristie/ass-subtitle-loader |
 | Support website | https://github.com/maristie/ass-subtitle-loader/issues |
 | License | MIT for extension code; bundled Noto font retains SIL OFL |
@@ -57,4 +57,4 @@ Raw lint retains an Android-only warning about the Firefox 140 no-data declarati
 - [Source code submission](https://extensionworkshop.com/documentation/publish/source-code-submission/): source, locked dependencies, build environment, and reproducible build instructions.
 - [Create an appealing listing](https://extensionworkshop.com/documentation/develop/create-an-appealing-listing/): summary maximum 250 characters; screenshots recommended at 1280 × 800.
 
-An authenticated Mozilla account and its developer agreement are needed for actual submission. Preparation does not presume AMO acceptance or a live listing URL.
+Actual submission can use an authenticated Mozilla account in the Developer Hub or AMO’s authenticated v5 API. The existing local extension projects use API credentials held in macOS Keychain. Keep credentials out of the repository, shell arguments, and diagnostic output. Local preparation remains offline and does not perform signing or submission. See [AMO-SUBMISSION.md](AMO-SUBMISSION.md) for the submitted release status.

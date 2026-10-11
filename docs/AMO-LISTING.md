@@ -35,4 +35,4 @@ These images use the production CSS bundle in the synthetic test harness; they c
 
 ## Submission status
 
-Prepared locally for review; unsigned and not submitted to AMO.
+Version 0.2.0 has been submitted to AMO’s listed channel and is awaiting review. The local upload XPI remains unsigned. See [AMO-SUBMISSION.md](AMO-SUBMISSION.md) for release identifiers and the exact uploaded source revision. AMO approval and a live public listing are not presumed.
