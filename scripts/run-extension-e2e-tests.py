@@ -16,7 +16,9 @@ def run_page(client,base,private=False,site=None):
         if not ready:raise AssertionError('Public video readiness')
     else:
         ready=execute_async(client,"""const done=arguments[arguments.length-1];let n=0;const timer=setInterval(()=>{if(document.body.dataset.ready==='1'){clearInterval(timer);done(true);}else if(++n>150){clearInterval(timer);done(false);}},100);""",timeout=20000)
-        if not ready:raise AssertionError('Synthetic video boot')
+        if not ready:
+            metrics=client.command('WebDriver:ExecuteScript',{'script':"const v=document.querySelector('video');return {readyState:v.readyState,networkState:v.networkState,errorCode:v.error?.code || 0,paused:v.paused,foreground:document.hasFocus()};",'args':[]})
+            raise AssertionError('Synthetic video boot: '+json.dumps(metrics))
     workflow=(ROOT/'test/browser/extension-css-workflow.js').read_text()
     if site:workflow="""(async()=>{const r=await globalThis.__cssTestListener({type:'ASS_SUBTITLE_LOAD',name:'synthetic-smoke.ass',content:globalThis.__cssTestTrack});if(!r.ok || !r.status.rendererReady || r.status.rendererBackend!=='dom') throw new Error('Public-video CSS smoke');return {ok:true,privateContext:r.status.privateContext,workflowPassed:true};})()"""
     client.command('Marionette:SetContext',{'value':'chrome'})
@@ -63,10 +65,16 @@ def main():
       with firefox_session(args.firefox_bin,profile,get_available_port(),allow_system_access=True,script_timeout=45000) as client:
         client.command('Addon:Install',{'path':str(ROOT/'dist/ass-subtitle-loader-0.2.0-unsigned.xpi'),'temporary':True,'allowPrivateBrowsing':True})
         normal=run_page(client,base)
+        previous_handles=set(client.command('WebDriver:GetWindowHandles',{}))
         client.command('Marionette:SetContext',{'value':'chrome'})
-        execute_async(client,'''const done=arguments[arguments.length-1];const {OpenBrowserWindow}=Services.wm.getMostRecentWindow('navigator:browser');const win=OpenBrowserWindow({private:true});win.addEventListener('load',()=>done(true),{once:true});''')
-        handles=client.command('WebDriver:GetWindowHandles',{})
-        client.command('WebDriver:SwitchToWindow',{'handle':handles[-1]})
+        execute_async(client,'''const done=arguments[arguments.length-1];const {OpenBrowserWindow}=Services.wm.getMostRecentWindow('navigator:browser');const win=OpenBrowserWindow({private:true});win.addEventListener('load',()=>{win.focus();done(true);},{once:true});''')
+        client.command('Marionette:SetContext',{'value':'content'})
+        handles=set(client.command('WebDriver:GetWindowHandles',{}))-previous_handles
+        if len(handles)!=1:raise AssertionError('Private window handle is ambiguous')
+        client.command('Marionette:SetContext',{'value':'content'})
+        client.command('WebDriver:SwitchToWindow',{'handle':handles.pop()})
+        client.command('Marionette:SetContext',{'value':'chrome'})
+        client.command('WebDriver:ExecuteScript',{'script':'window.focus(); return true;','args':[]})
         private=run_page(client,base,True)
         if args.real_site:run_page(client,base,True,site=args.real_site)
         print(json.dumps({'installedExtension':normal,'privateWindow':private,'realSiteCssReady':bool(args.real_site)}))
