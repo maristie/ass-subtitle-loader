@@ -17,7 +17,7 @@ def run_page(client,base,private=False,site=None):
     else:
         ready=execute_async(client,"""const done=arguments[arguments.length-1];let n=0;const timer=setInterval(()=>{if(document.body.dataset.ready==='1'){clearInterval(timer);done(true);}else if(++n>150){clearInterval(timer);done(false);}},100);""",timeout=20000)
         if not ready:
-            metrics=client.command('WebDriver:ExecuteScript',{'script':"const v=document.querySelector('video');return {readyState:v.readyState,networkState:v.networkState,errorCode:v.error?.code || 0,paused:v.paused,foreground:document.hasFocus()};",'args':[]})
+            metrics=client.command('WebDriver:ExecuteScript',{'script':"const v=document.querySelector('video');return {url:location.href,readyState:v?.readyState,networkState:v?.networkState,errorCode:v?.error?.code || 0,paused:v?.paused,foreground:document.hasFocus()};",'args':[]})
             raise AssertionError('Synthetic video boot: '+json.dumps(metrics))
     workflow=(ROOT/'test/browser/extension-css-workflow.js').read_text()
     if site:workflow="""(async()=>{const r=await globalThis.__cssTestListener({type:'ASS_SUBTITLE_LOAD',name:'synthetic-smoke.ass',content:globalThis.__cssTestTrack});if(!r.ok || !r.status.rendererReady || r.status.rendererBackend!=='dom') throw new Error('Public-video CSS smoke');return {ok:true,privateContext:r.status.privateContext,workflowPassed:true};})()"""
@@ -32,10 +32,17 @@ done({tabId:extension.apiManager.global.tabTracker.getId(tab),base:extension.bas
     result=execute_async(client,'''const [tabId,track,workflow]=arguments;const done=arguments[arguments.length-1];
 (async()=>{
  const api=window.browser;
+ async function until(check,label) {
+  const deadline=performance.now()+5000;
+  do {if(await check())return;await new Promise(resolve=>setTimeout(resolve,50));}while(performance.now()<deadline);
+  throw new Error(label);
+ }
+ const targetVisible=async()=> (await api.tabs.executeScript(tabId,{code:'document.visibilityState === "visible"'}))[0];
  await api.tabs.executeScript(tabId,{code:'const originalAdd=browser.runtime.onMessage.addListener.bind(browser.runtime.onMessage);browser.runtime.onMessage.addListener=listener=>{globalThis.__cssTestListener=listener;originalAdd(listener);};true;'});
  await api.tabs.executeScript(tabId,{file:'/build/content.bundle.js'});
  await api.tabs.executeScript(tabId,{code:'globalThis.__cssTestTrack='+JSON.stringify(track)});
  await api.tabs.update(tabId,{active:true});
+ await until(targetVisible,'Test tab activation');
  const panel=document.querySelector('.state-panel');
  if(!panel || panel.open || document.querySelector('#renderer-preference')) throw new Error('Popup CSS controls or collapsed disclosure');
  if(api.extension.inIncognitoContext && !document.querySelector('#diagnostics').disabled) throw new Error('Private diagnostic UI');
@@ -43,11 +50,12 @@ done({tabId:extension.apiManager.global.tabTracker.getId(tab),base:extension.bas
  const result=(await api.tabs.executeScript(tabId,{code:workflow}))[0];
  const popupTabs=await api.tabs.query({url:api.runtime.getURL('popup/popup.html')});
  await api.tabs.update(popupTabs[0].id,{active:true});
- await new Promise(resolve=>setTimeout(resolve,150));
+ await until(async()=>document.visibilityState==='visible' && !(await targetVisible()),'Test tab background transition');
  await api.tabs.update(tabId,{active:true});
- await new Promise(resolve=>setTimeout(resolve,200));
- const resumed=(await api.tabs.executeScript(tabId,{code:'globalThis.__cssTestListener({type:"ASS_SUBTITLE_PING"})'}))[0];
- if(!resumed.status.rendererReady || !resumed.status.overlayConnected) throw new Error('Tab switching resynchronization');
+ await until(async()=>{
+  if(!(await targetVisible()))return false;
+  return (await api.tabs.executeScript(tabId,{code:'(async()=>{const {status}=await globalThis.__cssTestListener({type:"ASS_SUBTITLE_PING"});const video=document.querySelector("video");return status.rendererReady && status.overlayConnected && !video.paused && video.readyState>=2 && [...document.querySelectorAll(".ass-subtitle-loader-dom-comment")].some(node=>node.style.animationPlayState==="running");})()'}))[0];
+ },'Tab switching resynchronization');
  const after=await api.storage.local.get(null);
  if(JSON.stringify(before)!==JSON.stringify(after)) throw new Error('Storage mutated during temporary/private workflow');
  done(result);
